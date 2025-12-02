@@ -161,7 +161,7 @@
   border: 2px solid transparent;
   border-radius: 12px;
   color: #fff;
-  font-size: 16px;
+  font-size: 14px;
   transition: all 0.3s;
   box-sizing: border-box;
 }
