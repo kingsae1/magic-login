@@ -1,4 +1,4 @@
-!function(){function t(t){this.sessionTimeout=(t=t||{}).sessionTimeout||18e5,this.serviceId=t.serviceId||"Service",this.logoUrl=t.logoUrl||"",this.onLogin=t.onLogin||function(){},this.onLogout=t.onLogout||function(){},this.sessionTimer=null,this.user=null,this.overlay=null,this.activeTab="signin",this.isLoading=!1,this.showPassword=!1;var e=this;this.activityHandler=function(){e.user&&(e.user.loginTime=Date.now(),e.startSessionTimer())}}t.prototype.init=function(){this.renderLoginPopup(),this.bindActivityEvents(),this.showLoginPopup()},t.prototype.addStyles=function(){var t;document.getElementById("auth-lib-styles")||((t=document.createElement("style")).id="auth-lib-styles",t.textContent=`
+!function(){function t(t){this.sessionTimeout=(t=t||{}).sessionTimeout||18e5,this.serviceId=t.serviceId||"Service",this.logoUrl=t.logoUrl||"",this.onLogin=t.onLogin||function(){},this.onLogout=t.onLogout||function(){},this.sessionTimer=null,this.user=null,this.overlay=null,this.activeTab="signin",this.isLoading=!1,this.showPassword=!1,this.version=.3;var e=this;this.activityHandler=function(){e.user&&(e.user.loginTime=Date.now(),e.startSessionTimer())}}t.prototype.init=function(){this.renderLoginPopup(),this.bindActivityEvents(),this.showLoginPopup()},t.prototype.addStyles=function(){var t;document.getElementById("auth-lib-styles")||((t=document.createElement("style")).id="auth-lib-styles",t.textContent=`
 /* ===== Overlay ===== */
 .auth-overlay {
   position: fixed;
@@ -6,7 +6,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
   z-index: 9999;
@@ -33,7 +33,7 @@
   border-radius: 20px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
   width: 90%;
-  max-width: 450px;
+  max-width: 380px;
   max-height: 90vh;
   overflow: visible;
   transform: translateY(30px) scale(0.95);
@@ -71,6 +71,7 @@
 .auth-header {
   padding: 24px 24px 0;
   margin-bottom: 20px;
+  width: 45%;
 }
 .auth-tabs {
   display: flex;
@@ -238,6 +239,43 @@
   }
 }
 
+/* ===== Toast ===== */
+.auth-toast {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  z-index: 10000;
+  opacity: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 400px;
+}
+.auth-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.auth-toast.success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+}
+.auth-toast.error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+}
+.auth-toast-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
 /* ===== Footer ===== */
 .auth-copyright {
   color: rgba(206, 179, 255, 0.48);
@@ -252,6 +290,10 @@
   }
   .auth-name-row {
     grid-template-columns: 1fr;
+  }
+  .auth-toast {
+    bottom: 20px;
+    max-width: 90%;
   }
 }
 `,document.head.appendChild(t))},t.prototype.renderLoginPopup=function(){this.overlay=document.createElement("div"),this.overlay.className="auth-overlay";var t=this.logoUrl?`<img src="${this.logoUrl}" class="auth-logo-img"/>`:`<svg class="auth-logo-svg" viewBox="0 0 24 24" fill="none">
@@ -359,4 +401,10 @@
             </button>
           </div>
         </div>
-      `;t.innerHTML=e,this.bindPasswordToggle()},t.prototype.bindEvents=function(){var e=this;this.overlay.querySelectorAll(".auth-tab").forEach(function(t){t.addEventListener("click",function(){e.switchTab(this.getAttribute("data-tab"))})}),document.getElementById("authSubmitBtn").addEventListener("click",function(){e.handleSubmit()})},t.prototype.bindPasswordToggle=function(){var t=this,e=document.getElementById("authPwdToggle");e&&e.addEventListener("click",function(){t.showPassword=!t.showPassword,document.getElementById("authPassword").type=t.showPassword?"text":"password"})},t.prototype.switchTab=function(e){this.activeTab=e;this.overlay.querySelectorAll(".auth-tab").forEach(function(t){t.getAttribute("data-tab")===e?t.classList.add("active"):t.classList.remove("active")});var t=this.overlay.querySelector(".auth-title"),i=document.getElementById("authSubmitBtn");"signup"===e?(t.textContent="계정 생성",i.textContent="계정 생성 요청하기"):(t.textContent="로그인",i.textContent="로그인"),this.renderFormContent()},t.prototype.handleSubmit=function(){"signin"===this.activeTab?this.handleSignIn():this.handleSignUp()},t.prototype.handleSignIn=function(){var t,e=document.getElementById("authUserId").value.trim(),i=document.getElementById("authPassword").value;this.hideError(),e&&i?(this.setLoading(!0),t=this,setTimeout(function(){t.setLoading(!1),t.login({userId:e,password:i})},1e3)):this.showError("아이디와 비밀번호를 모두 입력해주세요.")},t.prototype.handleSignUp=function(){var t,e=document.getElementById("authFirstName").value.trim(),i=document.getElementById("authLastName").value.trim(),o=document.getElementById("authUserId").value.trim(),a=document.getElementById("authEmail").value.trim(),n=document.getElementById("authPhone").value.trim();this.hideError(),e&&i&&o&&a&&n?(this.setLoading(!0),t=this,setTimeout(function(){t.setLoading(!1),t.login({userId:o,firstName:e,lastName:i,email:a,phone:n})},1e3)):this.showError("모든 필드를 입력해주세요.")},t.prototype.setLoading=function(t){this.isLoading=t;var e=document.getElementById("authSubmitBtn");t?(e.disabled=!0,t="signup"===this.activeTab?"계정 생성 중...":"로그인 중...",e.innerHTML='<span class="auth-spinner"></span>'+t):(e.disabled=!1,e.textContent="signup"===this.activeTab?"계정 생성 요청하기":"로그인")},t.prototype.login=function(t){this.user={id:Date.now(),userId:t.userId,firstName:t.firstName||"",lastName:t.lastName||"",email:t.email||"",phone:t.phone||"",loginTime:Date.now()},this.startSessionTimer(),this.hideLoginPopup(),this.onLogin(this.user)},t.prototype.logout=function(){this.clearSessionTimer();var t=this.user;this.user=null,this.showLoginPopup(),this.onLogout(t)},t.prototype.startSessionTimer=function(){var t=this;this.clearSessionTimer(),this.sessionTimer=setTimeout(function(){t.logout()},this.sessionTimeout)},t.prototype.clearSessionTimer=function(){this.sessionTimer&&(clearTimeout(this.sessionTimer),this.sessionTimer=null)},t.prototype.bindActivityEvents=function(){var e=this;["click","keydown","scroll","mousemove"].forEach(function(t){window.addEventListener(t,e.activityHandler)})},t.prototype.showLoginPopup=function(){this.overlay&&(this.overlay.classList.remove("hide"),setTimeout(()=>{this.overlay.classList.add("show")},10))},t.prototype.hideLoginPopup=function(){this.overlay&&(this.overlay.classList.remove("show"),setTimeout(()=>{this.overlay.classList.add("hide")},300))},t.prototype.showError=function(t){var e=document.getElementById("authError");e&&(e.style.display="block",e.textContent=t)},t.prototype.hideError=function(){var t=document.getElementById("authError");t&&(t.style.display="none")},window.AuthLibrary=t}();
+      `;t.innerHTML=e,this.bindPasswordToggle()},t.prototype.bindEvents=function(){var e=this;this.overlay.querySelectorAll(".auth-tab").forEach(function(t){t.addEventListener("click",function(){e.switchTab(this.getAttribute("data-tab"))})}),document.getElementById("authSubmitBtn").addEventListener("click",function(){e.handleSubmit()})},t.prototype.bindPasswordToggle=function(){var t=this,e=document.getElementById("authPwdToggle");e&&e.addEventListener("click",function(){t.showPassword=!t.showPassword,document.getElementById("authPassword").type=t.showPassword?"text":"password"})},t.prototype.switchTab=function(e){this.activeTab=e;this.overlay.querySelectorAll(".auth-tab").forEach(function(t){t.getAttribute("data-tab")===e?t.classList.add("active"):t.classList.remove("active")});var t=this.overlay.querySelector(".auth-title"),o=document.getElementById("authSubmitBtn");"signup"===e?(t.textContent="계정 생성",o.textContent="계정 생성 요청하기"):(t.textContent="로그인",o.textContent="로그인"),this.renderFormContent()},t.prototype.handleSubmit=function(){"signin"===this.activeTab?this.handleSignIn():this.handleSignUp()},t.prototype.handleSignIn=function(){var o,i=document.getElementById("authUserId").value.trim(),a=document.getElementById("authPassword").value;this.hideError(),i&&a?(this.setLoading(!0),o=this,fetch("https://magicapi.netlify.app/api/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:i,password:a,service_id:this.serviceId})}).then(function(t){return t.ok?t.json():t.json().then(function(t){throw new Error(t.message||"로그인에 실패했습니다.")})}).then(function(t){o.setLoading(!1);var e=t?.access_token||t?.token||t?.accessToken;e?sessionStorage.setItem("accessToken",e):console.warn("AccessToken을 찾을 수 없습니다. 응답 구조:",t),o.showToast("로그인에 성공했습니다!","success",500),setTimeout(function(){o.login({userId:i,password:a,...t})},500)}).catch(function(t){o.setLoading(!1),o.showToast(t.message||"로그인 중 오류가 발생했습니다.","error",1e3),console.error("Login error:",t)})):this.showToast("아이디와 비밀번호를 모두 입력해주세요.","error",1e3)},t.prototype.handleSignUp=function(){var t,e=document.getElementById("authFirstName").value.trim(),o=document.getElementById("authLastName").value.trim(),i=document.getElementById("authUserId").value.trim(),a=document.getElementById("authEmail").value.trim(),n=document.getElementById("authPhone").value.trim();this.hideError(),e&&o&&i&&a&&n?(this.setLoading(!0),t=this,setTimeout(function(){t.setLoading(!1),t.login({userId:i,firstName:e,lastName:o,email:a,phone:n})},1e3)):this.showError("모든 필드를 입력해주세요.")},t.prototype.setLoading=function(t){this.isLoading=t;var e=document.getElementById("authSubmitBtn");t?(e.disabled=!0,t="signup"===this.activeTab?"계정 생성 중...":"로그인 중...",e.innerHTML='<span class="auth-spinner"></span>'+t):(e.disabled=!1,e.textContent="signup"===this.activeTab?"계정 생성 요청하기":"로그인")},t.prototype.login=function(t){this.user={id:Date.now(),userId:t.userId,firstName:t.firstName||"",lastName:t.lastName||"",email:t.email||"",phone:t.phone||"",loginTime:Date.now()},this.startSessionTimer(),this.hideLoginPopup(),this.onLogin(this.user)},t.prototype.logout=function(){var t=this,e=sessionStorage.getItem("accessToken");e?fetch("https://magicapi.netlify.app/api/auth/logout",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+e}}).then(function(t){return t.json()}).then(function(t){console.log("Logout successful:",t)}).catch(function(t){console.error("Logout error:",t)}).finally(function(){sessionStorage.removeItem("accessToken"),t.completeLogout()}):t.completeLogout()},t.prototype.completeLogout=function(){this.clearSessionTimer();var t=this.user;this.user=null,this.showLoginPopup(),this.onLogout(t)},t.prototype.startSessionTimer=function(){var t=this;this.clearSessionTimer(),this.sessionTimer=setTimeout(function(){t.logout()},this.sessionTimeout)},t.prototype.clearSessionTimer=function(){this.sessionTimer&&(clearTimeout(this.sessionTimer),this.sessionTimer=null)},t.prototype.bindActivityEvents=function(){var e=this;["click","keydown","scroll","mousemove"].forEach(function(t){window.addEventListener(t,e.activityHandler)})},t.prototype.showLoginPopup=function(){this.overlay&&(this.overlay.classList.remove("hide"),setTimeout(()=>{this.overlay.classList.add("show")},10))},t.prototype.hideLoginPopup=function(){this.overlay&&(this.overlay.classList.remove("show"),setTimeout(()=>{this.overlay.classList.add("hide")},300))},t.prototype.showError=function(t){var e=document.getElementById("authError");e&&(e.style.display="block",e.textContent=t)},t.prototype.hideError=function(){var t=document.getElementById("authError");t&&(t.style.display="none")},t.prototype.showToast=function(t,e,o){e=e||"success",o=o||500;var i=document.querySelector(".auth-toast"),a=(i&&i.remove(),document.createElement("div")),i=(a.className="auth-toast "+e,"success"===e?`<svg class="auth-toast-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+             d="M5 13l4 4L19 7"/>
+         </svg>`:`<svg class="auth-toast-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+             d="M6 18L18 6M6 6l12 12"/>
+         </svg>`);a.innerHTML=i+"<span>"+t+"</span>",document.body.appendChild(a),setTimeout(function(){a.classList.add("show")},10),setTimeout(function(){a.classList.remove("show"),setTimeout(function(){a.remove()},300)},o)},window.AuthLibrary=t,console.log("[MAGICLOGIN] VERSION : ",.3)}();
