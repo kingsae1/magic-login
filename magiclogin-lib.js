@@ -1,4 +1,4 @@
-!function(){function t(t){this.sessionTimeout=(t=t||{}).sessionTimeout||18e5,this.serviceId=t.serviceId||"Service",this.logoUrl=t.logoUrl||"",this.onLogin=t.onLogin||function(){},this.onLogout=t.onLogout||function(){},this.sessionTimer=null,this.user=null,this.overlay=null,this.activeTab="signin",this.isLoading=!1,this.showPassword=!1,this.version=.3;var e=this;this.activityHandler=function(){e.user&&(e.user.loginTime=Date.now(),e.startSessionTimer())}}t.prototype.init=function(){this.renderLoginPopup(),this.bindActivityEvents(),this.showLoginPopup()},t.prototype.addStyles=function(){var t;document.getElementById("auth-lib-styles")||((t=document.createElement("style")).id="auth-lib-styles",t.textContent=`
+!function(){function t(t){this.sessionTimeout=(t=t||{}).sessionTimeout||18e5,this.serviceId=t.serviceId||"Service",this.logoUrl=t.logoUrl||"",this.onLogin=t.onLogin||function(){},this.onLogout=t.onLogout||function(){},this.sessionTimer=null,this.user=null,this.overlay=null,this.activeTab="signin",this.isLoading=!1,this.showPassword=!1,this.version=.4;var e=this;this.activityHandler=function(){e.user&&(e.user.loginTime=Date.now(),e.startSessionTimer())}}t.prototype.init=function(){this.renderLoginPopup(),this.bindActivityEvents(),this.showLoginPopup()},t.prototype.addStyles=function(){var t;document.getElementById("auth-lib-styles")||((t=document.createElement("style")).id="auth-lib-styles",t.textContent=`
 /* ===== Overlay ===== */
 .auth-overlay {
   position: fixed;
@@ -71,7 +71,7 @@
 .auth-header {
   padding: 24px 24px 0;
   margin-bottom: 20px;
-  width: 45%;
+  width: 65%;
 }
 .auth-tabs {
   display: flex;
@@ -84,10 +84,10 @@
   background: transparent;
   border: none;
   color: #fff;
-  padding: 8px 16px;
+  padding: 10px 8px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   transition: all 0.3s;
   flex: 1;
@@ -407,4 +407,4 @@
          </svg>`:`<svg class="auth-toast-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
              d="M6 18L18 6M6 6l12 12"/>
-         </svg>`);a.innerHTML=i+"<span>"+t+"</span>",document.body.appendChild(a),setTimeout(function(){a.classList.add("show")},10),setTimeout(function(){a.classList.remove("show"),setTimeout(function(){a.remove()},300)},o)},window.AuthLibrary=t,console.log("[MAGICLOGIN] VERSION : ",.3)}();
+         </svg>`);a.innerHTML=i+"<span>"+t+"</span>",document.body.appendChild(a),setTimeout(function(){a.classList.add("show")},10),setTimeout(function(){a.classList.remove("show"),setTimeout(function(){a.remove()},300)},o)},window.AuthLibrary=t,console.log("[LOGIN] VERSION : ",.4)}();
